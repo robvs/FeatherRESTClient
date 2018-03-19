@@ -1,0 +1,17 @@
+{
+	"_comment": "This file provides fake web service results for my-json-server.typicode.com. i.e. GET http://my-json-server.typicode.com/robvs/FeatherRESTClient/users",
+	"users": [
+		{
+			"username": "red-rocker",
+			"name": "Sammy Hagar"
+		},
+		{
+			"username": "diamond-dave",
+			"name": "David Lee Roth"
+		}
+	],
+	"authenticate": {
+		"secondsRemaining": 900,
+		"apiToken": "typicode"
+	}
+}
