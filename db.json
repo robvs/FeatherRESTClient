@@ -2,10 +2,12 @@
 	"_comment": "This file provides fake web service results for my-json-server.typicode.com. i.e. GET http://my-json-server.typicode.com/robvs/FeatherRESTClient/users",
 	"users": [
 		{
+			"id": 1, 
 			"username": "red-rocker",
 			"name": "Sammy Hagar"
 		},
 		{
+			"id": 2,
 			"username": "diamond-dave",
 			"name": "David Lee Roth"
 		}
