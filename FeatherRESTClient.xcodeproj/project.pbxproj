@@ -7,6 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7F345985205C88CF00E8A07A /* IcndbService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F345983205C88CF00E8A07A /* IcndbService.swift */; };
+		7F34598F205C898B00E8A07A /* WebServiceable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F345989205C898A00E8A07A /* WebServiceable.swift */; };
+		7F345990205C898B00E8A07A /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F34598A205C898B00E8A07A /* Reachability.swift */; };
+		7F345991205C898B00E8A07A /* JsonWebService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F34598B205C898B00E8A07A /* JsonWebService.swift */; };
+		7F345992205C898B00E8A07A /* URLSessionManagable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F34598C205C898B00E8A07A /* URLSessionManagable.swift */; };
+		7F345993205C898B00E8A07A /* WebServiceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F34598D205C898B00E8A07A /* WebServiceError.swift */; };
+		7F345994205C8A2900E8A07A /* JsonWebService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F34598B205C898B00E8A07A /* JsonWebService.swift */; };
+		7F345995205C8A3A00E8A07A /* URLSessionManagable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F34598C205C898B00E8A07A /* URLSessionManagable.swift */; };
+		7F345996205C8A4E00E8A07A /* WebServiceable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F345989205C898A00E8A07A /* WebServiceable.swift */; };
+		7F345997205C8A5500E8A07A /* WebServiceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F34598D205C898B00E8A07A /* WebServiceError.swift */; };
+		7F345999205D7BA800E8A07A /* WebServiceTokenManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F345998205D7BA800E8A07A /* WebServiceTokenManager.swift */; };
+		7F34599B205D7DE600E8A07A /* AuthenticationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F34599A205D7DE600E8A07A /* AuthenticationService.swift */; };
+		7F34599D20608ACB00E8A07A /* BasicAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F34599C20608ACB00E8A07A /* BasicAuthManager.swift */; };
 		7F863F532058C52A001136A5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F863F522058C52A001136A5 /* AppDelegate.swift */; };
 		7F863F552058C52A001136A5 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F863F542058C52A001136A5 /* MasterViewController.swift */; };
 		7F863F572058C52A001136A5 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F863F562058C52A001136A5 /* DetailViewController.swift */; };
@@ -27,6 +40,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7F345983205C88CF00E8A07A /* IcndbService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IcndbService.swift; sourceTree = "<group>"; };
+		7F345989205C898A00E8A07A /* WebServiceable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebServiceable.swift; sourceTree = "<group>"; };
+		7F34598A205C898B00E8A07A /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
+		7F34598B205C898B00E8A07A /* JsonWebService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JsonWebService.swift; sourceTree = "<group>"; };
+		7F34598C205C898B00E8A07A /* URLSessionManagable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLSessionManagable.swift; sourceTree = "<group>"; };
+		7F34598D205C898B00E8A07A /* WebServiceError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebServiceError.swift; sourceTree = "<group>"; };
+		7F345998205D7BA800E8A07A /* WebServiceTokenManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebServiceTokenManager.swift; sourceTree = "<group>"; };
+		7F34599A205D7DE600E8A07A /* AuthenticationService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationService.swift; sourceTree = "<group>"; };
+		7F34599C20608ACB00E8A07A /* BasicAuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicAuthManager.swift; sourceTree = "<group>"; };
 		7F863F4F2058C52A001136A5 /* FeatherRESTClient.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FeatherRESTClient.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F863F522058C52A001136A5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7F863F542058C52A001136A5 /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
@@ -58,10 +80,35 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7F345981205C87F600E8A07A /* WebServices */ = {
+			isa = PBXGroup;
+			children = (
+				7F345987205C88FF00E8A07A /* Core */,
+				7F34599A205D7DE600E8A07A /* AuthenticationService.swift */,
+				7F345983205C88CF00E8A07A /* IcndbService.swift */,
+				7F34599C20608ACB00E8A07A /* BasicAuthManager.swift */,
+			);
+			path = WebServices;
+			sourceTree = "<group>";
+		};
+		7F345987205C88FF00E8A07A /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				7F34598B205C898B00E8A07A /* JsonWebService.swift */,
+				7F34598A205C898B00E8A07A /* Reachability.swift */,
+				7F34598C205C898B00E8A07A /* URLSessionManagable.swift */,
+				7F345989205C898A00E8A07A /* WebServiceable.swift */,
+				7F34598D205C898B00E8A07A /* WebServiceError.swift */,
+				7F345998205D7BA800E8A07A /* WebServiceTokenManager.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
 		7F863F462058C52A001136A5 = {
 			isa = PBXGroup;
 			children = (
 				7F863F512058C52A001136A5 /* FeatherRESTClient */,
+				7F345981205C87F600E8A07A /* WebServices */,
 				7F863F682058C52A001136A5 /* FeatherRESTClientTests */,
 				7F863F502058C52A001136A5 /* Products */,
 			);
@@ -202,9 +249,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7F34599D20608ACB00E8A07A /* BasicAuthManager.swift in Sources */,
+				7F345991205C898B00E8A07A /* JsonWebService.swift in Sources */,
+				7F345990205C898B00E8A07A /* Reachability.swift in Sources */,
+				7F345999205D7BA800E8A07A /* WebServiceTokenManager.swift in Sources */,
+				7F345992205C898B00E8A07A /* URLSessionManagable.swift in Sources */,
+				7F34599B205D7DE600E8A07A /* AuthenticationService.swift in Sources */,
 				7F863F572058C52A001136A5 /* DetailViewController.swift in Sources */,
 				7F863F552058C52A001136A5 /* MasterViewController.swift in Sources */,
+				7F345993205C898B00E8A07A /* WebServiceError.swift in Sources */,
 				7F863F532058C52A001136A5 /* AppDelegate.swift in Sources */,
+				7F34598F205C898B00E8A07A /* WebServiceable.swift in Sources */,
+				7F345985205C88CF00E8A07A /* IcndbService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -212,7 +268,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7F345997205C8A5500E8A07A /* WebServiceError.swift in Sources */,
+				7F345994205C8A2900E8A07A /* JsonWebService.swift in Sources */,
 				7F863F6A2058C52A001136A5 /* FeatherRESTClientTests.swift in Sources */,
+				7F345996205C8A4E00E8A07A /* WebServiceable.swift in Sources */,
+				7F345995205C8A3A00E8A07A /* URLSessionManagable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -246,6 +306,96 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		7F34599E20609B8000E8A07A /* Debug-Fakes */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = "Debug-Fakes";
+		};
+		7F34599F20609B8000E8A07A /* Debug-Fakes */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9JG95NNF4W;
+				INFOPLIST_FILE = FeatherRESTClient/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				"OTHER_SWIFT_FLAGS[arch=*]" = "-D USE_FAKES";
+				PRODUCT_BUNDLE_IDENTIFIER = com.randomvisual.FeatherRESTClient;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Debug-Fakes";
+		};
+		7F3459A020609B8000E8A07A /* Debug-Fakes */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9JG95NNF4W;
+				INFOPLIST_FILE = FeatherRESTClientTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.randomvisual.FeatherRESTClientTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FeatherRESTClient.app/FeatherRESTClient";
+			};
+			name = "Debug-Fakes";
+		};
 		7F863F6C2058C52A001136A5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -424,6 +574,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7F863F6C2058C52A001136A5 /* Debug */,
+				7F34599E20609B8000E8A07A /* Debug-Fakes */,
 				7F863F6D2058C52A001136A5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -433,6 +584,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7F863F6F2058C52A001136A5 /* Debug */,
+				7F34599F20609B8000E8A07A /* Debug-Fakes */,
 				7F863F702058C52A001136A5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -442,6 +594,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7F863F722058C52A001136A5 /* Debug */,
+				7F3459A020609B8000E8A07A /* Debug-Fakes */,
 				7F863F732058C52A001136A5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;

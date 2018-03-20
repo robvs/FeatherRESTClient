@@ -3,10 +3,14 @@
 //  FeatherRESTClient
 //
 //  Created by Rob Vander Sloot on 3/13/18.
-//  Copyright © 2018 Random Visual, LLC. All rights reserved.
+//  Copyright © 2018 Random Visual, LLC.
+//
+//  This source code is licensed under the MIT license found in the LICENSE file in the root directory of this source tree.
 //
 
 import UIKit
+
+let thisAppErrorDomain = "com.randomvisual.feather-rest-client"
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
@@ -16,6 +20,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 		// Override point for customization after application launch.
+        
+        // Initialize injectable singleton classes.
+        #if USE_FAKES
+            let thisSession = FakeUrlSessionManager()
+        #else
+            let configuration = URLSessionConfiguration.default
+            let thisSession = URLSession(configuration: configuration) as URLSessionManageable
+        #endif
+        JsonWebService.resetSharedInstance(session: thisSession, tokenManager: WebServiceTokenManager(), reachability: Reachability.shared)
+        
 		let splitViewController = window!.rootViewController as! UISplitViewController
 		let navigationController = splitViewController.viewControllers[splitViewController.viewControllers.count-1] as! UINavigationController
 		navigationController.topViewController!.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
