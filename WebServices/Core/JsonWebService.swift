@@ -11,7 +11,7 @@
 import Foundation
 
 
-// MARK: - Protocols
+// MARK: - Protocols & typealiases to support JSON web service requests.
 
 /// type def that represents a json dictionary
 public typealias Json = [String : Any]
@@ -37,7 +37,7 @@ final public class JsonWebService {
     /// This is initialized by resetSharedInstance(), which is expected to be called at startup.
     public private (set) static var shared: JsonWebService!
     
-    private let session: URLSessionManageable
+    private let session:      URLSessionManageable
     private let tokenManager: WebServiceTokenManageable
     private let reachability: ReachabilityCheckable
     

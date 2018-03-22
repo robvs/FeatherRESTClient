@@ -23,12 +23,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         // Initialize injectable singleton classes.
         #if USE_FAKES
-            let thisSession = FakeUrlSessionManager()
+            let thisSession  = FakeUrlSessionManager()
+            let tokenManager = FakeWebServiceTokenManager()
+            let reachability = FakeReachability()
         #else
             let configuration = URLSessionConfiguration.default
             let thisSession = URLSession(configuration: configuration) as URLSessionManageable
+            let tokenManager = WebServiceTokenManager()
+            let reachability = Reachability.shared
         #endif
-        JsonWebService.resetSharedInstance(session: thisSession, tokenManager: WebServiceTokenManager(), reachability: Reachability.shared)
+        JsonWebService.resetSharedInstance(session: thisSession, tokenManager: tokenManager, reachability: reachability)
         
 		let splitViewController = window!.rootViewController as! UISplitViewController
 		let navigationController = splitViewController.viewControllers[splitViewController.viewControllers.count-1] as! UINavigationController

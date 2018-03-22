@@ -13,7 +13,6 @@
 		7F345991205C898B00E8A07A /* JsonWebService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F34598B205C898B00E8A07A /* JsonWebService.swift */; };
 		7F345992205C898B00E8A07A /* URLSessionManagable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F34598C205C898B00E8A07A /* URLSessionManagable.swift */; };
 		7F345993205C898B00E8A07A /* WebServiceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F34598D205C898B00E8A07A /* WebServiceError.swift */; };
-		7F345994205C8A2900E8A07A /* JsonWebService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F34598B205C898B00E8A07A /* JsonWebService.swift */; };
 		7F345995205C8A3A00E8A07A /* URLSessionManagable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F34598C205C898B00E8A07A /* URLSessionManagable.swift */; };
 		7F345996205C8A4E00E8A07A /* WebServiceable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F345989205C898A00E8A07A /* WebServiceable.swift */; };
 		7F345997205C8A5500E8A07A /* WebServiceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F34598D205C898B00E8A07A /* WebServiceError.swift */; };
@@ -27,6 +26,7 @@
 		7F863F5C2058C52A001136A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7F863F5B2058C52A001136A5 /* Assets.xcassets */; };
 		7F863F5F2058C52A001136A5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7F863F5D2058C52A001136A5 /* LaunchScreen.storyboard */; };
 		7F863F6A2058C52A001136A5 /* FeatherRESTClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F863F692058C52A001136A5 /* FeatherRESTClientTests.swift */; };
+		7FC94FAA206349D90096CB08 /* JsonWebService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F34598B205C898B00E8A07A /* JsonWebService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -269,9 +269,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				7F345997205C8A5500E8A07A /* WebServiceError.swift in Sources */,
-				7F345994205C8A2900E8A07A /* JsonWebService.swift in Sources */,
 				7F863F6A2058C52A001136A5 /* FeatherRESTClientTests.swift in Sources */,
 				7F345996205C8A4E00E8A07A /* WebServiceable.swift in Sources */,
+				7FC94FAA206349D90096CB08 /* JsonWebService.swift in Sources */,
 				7F345995205C8A3A00E8A07A /* URLSessionManagable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

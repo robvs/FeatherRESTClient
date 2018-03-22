@@ -28,9 +28,9 @@ class MasterViewController: UITableViewController {
 		    detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
 		}
         
-        signIn() { (didSucceed) in
+        signIn() { [weak self] (didSucceed) in
             if didSucceed {
-                requestRandomJokes()
+                self?.requestRandomJokes()
             }
         }
 	}
@@ -95,7 +95,7 @@ extension MasterViewController {
 
 private extension MasterViewController {
     
-    func signIn(completion: (_ didSucceed: Bool) -> Void) {
+    func signIn(completion: @escaping (_ didSucceed: Bool) -> Void) {
         
         spinner.startAnimating()
         
@@ -108,12 +108,14 @@ private extension MasterViewController {
             case .success(let authInfo):
                 if let authInfo = authInfo {
                     BasicAuthManager.shared.update(apiToken: authInfo.apiToken, secondsRemaining: authInfo.secondsRemaining)
-                    DispatchQueue.main.async {
-                        self?.requestRandomJokes()
-                    }
                 }
+                
+                completion(true)
+                
             case .failure(let webServiceError):
                 print("\(#file)-\(#function) request error: ", webServiceError?.friendlyDescription ?? "unknown")
+                
+                completion(true)
             }
         }
     }
@@ -122,7 +124,7 @@ private extension MasterViewController {
         
         spinner.startAnimating()
         
-        let requestData = RequestDataForRandomJokes(numberOfJokes: 10) // Note that FakeUrlSessionManager is hard-coded to a specific number of jokes
+        let requestData = RequestDataForRandomJokes(numberOfJokes: 10)
         JsonWebService.shared.sendRequest(requestData) { [weak self] (jokesResponse: WebServiceResult<JokeListResponse>) in
             
             self?.spinner.stopAnimating()

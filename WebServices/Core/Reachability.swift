@@ -53,3 +53,19 @@ extension Reachability: ReachabilityCheckable {
         return ret
     }
 }
+
+
+
+// MARK: - FakeReachability
+
+/// This class is used to provide hard-coded responses to help with testing
+/// when the web servie is not available.
+final class FakeReachability {
+}
+
+extension FakeReachability: ReachabilityCheckable {
+    
+    func isConnected() -> Bool {
+        return true
+    }
+}

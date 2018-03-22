@@ -34,7 +34,7 @@ public struct RequestDataForAuthenticate: WebServiceRequestData {
     public var accept:        String?                     { return WebServiceHeader.genericAccept }
     public var contentType:   String?                     { return nil }
     public var customHeaders: [String : String]?          { return nil }
-    public var method:        WebServiceRequestMethod     { return .get }   // this would normally be a POST
+    public var method:        WebServiceRequestMethod     { return .get }   // this would normally be a POST, but we're using a dummy endpoint.
     public var authorization: WebServiceAuthorizationType { return .none }
     
     // NOTE: The body would normally include the username and password, but it must be nil here

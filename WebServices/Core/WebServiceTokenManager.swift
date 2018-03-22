@@ -95,3 +95,30 @@ private extension WebServiceTokenManager {
         print("Renew token with updated expirationTime: \(BasicAuthManager.shared.expirationTime)")
     }
 }
+
+
+
+// MARK: - FakeWebServiceTokenManager
+
+/// This class is used to provide hard-coded responses to help with testing
+/// when the web servie is not available.
+final class FakeWebServiceTokenManager {
+}
+
+extension FakeWebServiceTokenManager: WebServiceTokenManageable {
+    
+    func ensureValidToken(ofType tokenType: WebServiceAuthorizationType,
+                          completion: @escaping (AuthorizationTokenResult) -> Void) {
+        
+        DispatchQueue.main.async {
+            switch tokenType {
+            case .none:
+                completion((token: nil, error: nil))
+                
+            case .basicAuth:
+                completion((token: "token-guid", error: nil))
+            }
+        }
+    }
+}
+
