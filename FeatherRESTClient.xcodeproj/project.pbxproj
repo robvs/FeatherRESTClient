@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7F227011207C46FE0083293C /* JsonWebServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F227010207C46FE0083293C /* JsonWebServiceTests.swift */; };
+		7F227014207C47490083293C /* WebServicesHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F227013207C47490083293C /* WebServicesHelper.swift */; };
+		7F227015207C48E10083293C /* AuthenticationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F34599A205D7DE600E8A07A /* AuthenticationService.swift */; };
+		7F227016207C490C0083293C /* IcndbService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F345983205C88CF00E8A07A /* IcndbService.swift */; };
+		7F227018207D6F360083293C /* AuthenticationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F227017207D6F360083293C /* AuthenticationServiceTests.swift */; };
 		7F345985205C88CF00E8A07A /* IcndbService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F345983205C88CF00E8A07A /* IcndbService.swift */; };
 		7F34598F205C898B00E8A07A /* WebServiceable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F345989205C898A00E8A07A /* WebServiceable.swift */; };
 		7F345990205C898B00E8A07A /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F34598A205C898B00E8A07A /* Reachability.swift */; };
@@ -25,7 +30,6 @@
 		7F863F5A2058C52A001136A5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7F863F582058C52A001136A5 /* Main.storyboard */; };
 		7F863F5C2058C52A001136A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7F863F5B2058C52A001136A5 /* Assets.xcassets */; };
 		7F863F5F2058C52A001136A5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7F863F5D2058C52A001136A5 /* LaunchScreen.storyboard */; };
-		7F863F6A2058C52A001136A5 /* FeatherRESTClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F863F692058C52A001136A5 /* FeatherRESTClientTests.swift */; };
 		7FC94FAA206349D90096CB08 /* JsonWebService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F34598B205C898B00E8A07A /* JsonWebService.swift */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +44,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7F227010207C46FE0083293C /* JsonWebServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonWebServiceTests.swift; sourceTree = "<group>"; };
+		7F227013207C47490083293C /* WebServicesHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebServicesHelper.swift; sourceTree = "<group>"; };
+		7F227017207D6F360083293C /* AuthenticationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationServiceTests.swift; sourceTree = "<group>"; };
 		7F345983205C88CF00E8A07A /* IcndbService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IcndbService.swift; sourceTree = "<group>"; };
 		7F345989205C898A00E8A07A /* WebServiceable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebServiceable.swift; sourceTree = "<group>"; };
 		7F34598A205C898B00E8A07A /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
@@ -58,7 +65,6 @@
 		7F863F5E2058C52A001136A5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7F863F602058C52A001136A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7F863F652058C52A001136A5 /* FeatherRESTClientTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FeatherRESTClientTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		7F863F692058C52A001136A5 /* FeatherRESTClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatherRESTClientTests.swift; sourceTree = "<group>"; };
 		7F863F6B2058C52A001136A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -80,6 +86,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7F227012207C47370083293C /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				7F227013207C47490083293C /* WebServicesHelper.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		7F345981205C87F600E8A07A /* WebServices */ = {
 			isa = PBXGroup;
 			children = (
@@ -140,7 +154,9 @@
 		7F863F682058C52A001136A5 /* FeatherRESTClientTests */ = {
 			isa = PBXGroup;
 			children = (
-				7F863F692058C52A001136A5 /* FeatherRESTClientTests.swift */,
+				7F227012207C47370083293C /* Helpers */,
+				7F227017207D6F360083293C /* AuthenticationServiceTests.swift */,
+				7F227010207C46FE0083293C /* JsonWebServiceTests.swift */,
 				7F863F6B2058C52A001136A5 /* Info.plist */,
 			);
 			path = FeatherRESTClientTests;
@@ -268,11 +284,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7F227018207D6F360083293C /* AuthenticationServiceTests.swift in Sources */,
 				7F345997205C8A5500E8A07A /* WebServiceError.swift in Sources */,
-				7F863F6A2058C52A001136A5 /* FeatherRESTClientTests.swift in Sources */,
+				7F227016207C490C0083293C /* IcndbService.swift in Sources */,
 				7F345996205C8A4E00E8A07A /* WebServiceable.swift in Sources */,
+				7F227014207C47490083293C /* WebServicesHelper.swift in Sources */,
 				7FC94FAA206349D90096CB08 /* JsonWebService.swift in Sources */,
+				7F227011207C46FE0083293C /* JsonWebServiceTests.swift in Sources */,
 				7F345995205C8A3A00E8A07A /* URLSessionManagable.swift in Sources */,
+				7F227015207C48E10083293C /* AuthenticationService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -111,7 +111,6 @@ extension JsonWebService: JsonWebServiceable {
             // this is called when the web request completes.
             let dataTaskCompletion: (Data?, URLResponse?, Error?) -> Void = { (data, response, error) in
                 if let error = error {
-                    // TODO: log the error
                     print("\(#file) - \(#function) data task error: \(error.localizedDescription)")
                 }
                 
@@ -143,7 +142,6 @@ private extension JsonWebService {
         
         // is the url path valid?
         guard let url = URL(string: webRequestData.path) else {
-            // TODO: log the error
             return (request: nil, error: WebServiceError.urlPath)
         }
         
@@ -154,7 +152,6 @@ private extension JsonWebService {
                 requestBody = jsonData
             }
             else {
-                // TODO: log the error
                 return (request: nil, error: WebServiceError.unexpected)
             }
         }
@@ -226,21 +223,18 @@ private extension JsonWebService {
         
         // check for request error
         if let error = error {
-            // TODO: log the error
             print("\(#file) - \(#function) JsonWebService response error: \(error.localizedDescription)")
             return .failure(WebServiceError.urlSession(error: error))
         }
         
         // check for expected response object type
         guard let response = response as? HTTPURLResponse else {
-            // TODO: log the error
             print("\(#file) - \(#function) JsonWebService response is not HTTPURLResponse")
             return .failure(WebServiceError.serverResponse)
         }
         
         // check for error response from server
         guard 200...299 ~= response.statusCode else {
-            // TODO: log the error
             print("\(#file) - \(#function) JsonWebService response code is not 200. It is \(response.statusCode)")
             return .failure(WebServiceError.statusCode(code: response.statusCode))
         }
@@ -258,7 +252,6 @@ private extension JsonWebService {
             return .success(model)
         }
         catch {
-            // TODO: log the error
             if let decodingError = error as? DecodingError {
                 print("\(#file) - \(#function) decode error: ", decodingError.detailedDescription)
             }

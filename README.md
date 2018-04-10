@@ -1,6 +1,33 @@
 # FeatherRESTClient
 Sample project that demonstrates a lightweight REST client framework using protocols and generics.
 
+## Using the Framework
+* Key source files are found in `WebServices/Core/`.
+* To add support for a new endpoint:
+    1. Create a new "XService.swift" file, where "X" is descriptive to the endpoint (i.e. `AuthenticationService.swift`).
+	1. Define an `Encodable` (or `Codable`) data model where the property names mirror the JSON response to the endpoint (i.e. `AuthenticationInfo`). It is possible for your data model to have property names that differ from the JSON, but that is not covered here.
+	1. Define a "RequestData" structure that conforms to `WebServiceRequestData` (i.e. `RequestDataForAuthenticate`). This represents the request URL, headers, method, etc.
+	1. Instantiate the request data structure and pass it to `JsonWebService.shared.sendRequest()`. For example:
+	
+	```swift
+    let requestData = RequestDataForAuthenticate(userId: "user-id", password: "passme")
+    JsonWebService.shared.sendRequest(requestData) { [weak self] (authResponse: WebServiceResult<AuthenticationInfo>) in
+        switch authResponse {
+        case .success(let authInfo):
+            if let authInfo = authInfo {
+                BasicAuthManager.shared.update(apiToken: authInfo.apiToken, secondsRemaining: authInfo.secondsRemaining)
+            }
+            
+            completion(true)
+            
+        case .failure(let webServiceError):
+            print("\(#file)-\(#function) request error: ", webServiceError?.friendlyDescription ?? "unknown")
+            
+            completion(true)
+        }
+    }
+	```
+
 ## Top-down View
 Before getting into the details of the implementation lets see how REST calls are made by the app. Try not to think too much about the UI implementation, it's simply a slight customization of Xcode's Master-Detail app template.
 
@@ -58,7 +85,8 @@ This makes the logic in `JsonWebService` fully unit testable!
 A compiler flag (`USE_FAKES`) is used to indicate whether to use a real `URLSession` or a fake one. The compiler flag is associated with a build scheme making it quick and easy to generate builds that use fakes instead of the real thing.
 
 ## Unit Tests
-
+* `JsonWebServiceTests.swift` includes a full suite of tests for `JsonWebService`. These tests illustrate how dependency injection enables the testing of web services code that is typically difficult to test.
+* `AuthenticationServiceTests.swift` illustrate testing the decoding from JSON data to an `AuthenticationInfo` object.
 
 ## License
 

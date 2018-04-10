@@ -64,7 +64,6 @@ private extension WebServiceTokenManager {
             switch serviceResult {
             case .success(let model):
                 guard let authenticationInfo = model else {
-                    // TODO: log this
                     assertionFailure("AuthenticationViewController.authenticateUser(): data model is nil.")
                     return
                 }
@@ -73,7 +72,6 @@ private extension WebServiceTokenManager {
                 completion(nil)
                 
             case .failure(let requestError):
-                // TODO: log this
                 var errorMessage = "Authorization token renewal failed. Please sign-out/sign-in if this error continues."
                 if let requestError = requestError {
                     errorMessage = requestError.friendlyDescription
