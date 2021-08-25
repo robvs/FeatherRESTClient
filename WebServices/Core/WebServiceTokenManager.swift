@@ -10,9 +10,27 @@
 
 import Foundation
 
-final class WebServiceTokenManager {}
+
+// MARK: - Class definition
+
+final class WebServiceTokenManager {
+    
+    private let tokenStorage: TokenPersisting
+    
+    init(tokenStorage: TokenPersisting) {
+        
+        self.tokenStorage = tokenStorage
+    }
+}
+
+
+// MARK: - WebServiceTokenManageable conformance
 
 extension WebServiceTokenManager: WebServiceTokenManageable {
+    
+    var authTokenInfo: WebServiceAuthTokenInfo? {
+        return decodeAuthToken(tokenStorage.getAuthToken())
+    }
     
     func ensureValidToken(ofType tokenType: WebServiceAuthorizationType,
                           completion: @escaping (AuthorizationTokenResult) -> Void) {
@@ -21,20 +39,13 @@ extension WebServiceTokenManager: WebServiceTokenManageable {
         case .none:
             completion((token: nil, error: nil))
             
-        case .basicAuth:
-            guard let apiToken = BasicAuthManager.shared.apiToken else {
-                let errorMessage = "Attempted to call protected service but no token was found."
-                let errorUserInfo = [NSLocalizedDescriptionKey : errorMessage]
-                let error = NSError(domain: thisAppErrorDomain, code: -1, userInfo: errorUserInfo)
-                
-                    completion((token: nil, error: WebServiceError.token(error: error)))
-                    return
-            }
-            
-            if BasicAuthManager.shared.isSessionExpired {
-                renewToken(apiToken) { (error) in
-                    if error == nil {
-                        completion((token: apiToken, error: nil))
+        case .authToken:
+            if tokenStorage.isCloseToExpiration() {
+                logger.debug("authToken is close to expiration. Renewing...")
+                renewToken() { (updatedSessionInfo, error) in
+                    
+                    if let updatedSessionInfo = updatedSessionInfo {
+                        completion((token: updatedSessionInfo.authToken, error: nil))
                     }
                     else {
                         completion((token: nil, error: error))
@@ -42,9 +53,20 @@ extension WebServiceTokenManager: WebServiceTokenManageable {
                 }
             }
             else {
-                completion((token: apiToken, error: nil))
+                guard let authToken = tokenStorage.getAuthToken() else {
+                    let error = AppString.error(for: .webServiceMissingToken)
+                    completion((token: nil, error: WebServiceError.token(error: error)))
+                    return
+                }
+                
+                completion((token: authToken, error: nil))
             }
         }
+    }
+    
+    func clearAuthToken() {
+        
+        tokenStorage.clearAuthToken()
     }
 }
 
@@ -56,67 +78,65 @@ private extension WebServiceTokenManager {
     /// Renew the given api token.
     /// - parameter apiToken:   The toke to be renewed.
     /// - parameter completion: Closure called upon completion. `error` is nil if successful.
-    func renewToken(_ apiToken: String, completion: @escaping (_ error: WebServiceError?) -> Void) {
+    func renewToken(completion: @escaping (_ updatedSessionInfo: WebServiceSessionModel?, _ error: WebServiceError?) -> Void) {
         
-        let requestData =  RequestDataForRenewToken()
-        JsonWebService.shared.sendRequest(requestData) { [weak self] (serviceResult: WebServiceResult<AuthenticationInfo>) in
+        guard let sessionInfo = tokenStorage.getSessionModel() else {
+            let error = AppString.error(for: .webServiceMissingToken)
+            completion(nil, WebServiceError.token(error: error))
+            return
+        }
+        
+        let requestData = RequestDataForRefreshToken(sessionInfo: sessionInfo)
+        JsonWebService.shared.sendRequest(requestData) {
+            [weak self] (serviceResult: WebServiceResult<AuthenticationInfo>) in
             
             switch serviceResult {
-            case .success(let model):
-                guard let authenticationInfo = model else {
-                    assertionFailure("AuthenticationViewController.authenticateUser(): data model is nil.")
-                    return
+            case .success(let authInfo):
+                guard let authInfo = authInfo else {
+                    logger.error("Refresh token request succeeded but the received data model was nil.")
+                    let error = AppString.error(for: .webServiceRenewTokenFailed)
+                    completion(nil, WebServiceError.token(error: error))
+                    break
                 }
                 
-                self?.updateSession(with: authenticationInfo)
-                completion(nil)
+                let expirationDate = Date().addingTimeInterval(Double(authInfo.secondsRemaining))
+                let sessionModel = WebServiceSessionModel(authToken: authInfo.accessToken,
+                                                          refreshToken: authInfo.refreshToken,
+                                                          expirationTime: expirationDate)
+                self?.tokenStorage.saveSessionModel(sessionModel)
+                completion(sessionModel, nil)
                 
             case .failure(let requestError):
-                var errorMessage = "Authorization token renewal failed. Please sign-out/sign-in if this error continues."
+                let error = AppString.error(for: .webServiceRenewTokenFailed)
+                var logMessage = AppString.errorText(for: .webServiceRenewTokenFailed)
                 if let requestError = requestError {
-                    errorMessage = requestError.friendlyDescription
+                    logMessage = "\(logMessage) \(requestError.friendlyDescription)"
                 }
                 
-                let errorUserInfo = [NSLocalizedDescriptionKey : errorMessage]
-                let error = NSError(domain: thisAppErrorDomain, code: -1, userInfo: errorUserInfo)
+                logger.warn(logMessage)
 
-                completion(WebServiceError.token(error: error))
+                completion(nil, WebServiceError.token(error: error))
             }
         }
     }
     
-    func updateSession(with authenticationInfo: AuthenticationInfo) {
+    func decodeAuthToken(_ authToken: String?) -> WebServiceAuthTokenInfo? {
         
-        BasicAuthManager.shared.update(apiToken: authenticationInfo.apiToken,
-                                       secondsRemaining: authenticationInfo.secondsRemaining)
+        guard let authToken = authToken else { return nil }
         
-        print("Renew token with updated expirationTime: \(BasicAuthManager.shared.expirationTime)")
-    }
-}
-
-
-
-// MARK: - FakeWebServiceTokenManager
-
-/// This class is used to provide hard-coded responses to help with testing
-/// when the web servie is not available.
-final class FakeWebServiceTokenManager {
-}
-
-extension FakeWebServiceTokenManager: WebServiceTokenManageable {
-    
-    func ensureValidToken(ofType tokenType: WebServiceAuthorizationType,
-                          completion: @escaping (AuthorizationTokenResult) -> Void) {
+        let segments = authToken.components(separatedBy: ".")
+        guard segments.count == 3 else { return nil }
         
-        DispatchQueue.main.async {
-            switch tokenType {
-            case .none:
-                completion((token: nil, error: nil))
-                
-            case .basicAuth:
-                completion((token: "token-guid", error: nil))
-            }
+        var base64String = segments[1]
+        
+        // add padding to the base64 string if necessary.
+        if base64String.count % 4 != 0 {
+            let padlen = 4 - base64String.count % 4
+            base64String.append(contentsOf: repeatElement("=", count: padlen))
         }
+        
+        guard let tokenData = Data(base64Encoded: base64String) else { return nil }
+        
+        return JsonUtil.toModel(jsonData: tokenData)
     }
 }
-

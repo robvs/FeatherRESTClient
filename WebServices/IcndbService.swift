@@ -46,6 +46,12 @@ public struct Joke: Codable {
     var categories: [String]
 }
 
+/// Base path to support web services.
+struct WebServicePathBase {
+    static var chuckNorris: String { return "https://api.icndb.com/" }
+    static var firebase:    String { return "https://firebasestorage.googleapis.com/v0/b/featherrestclient.appspot.com/o/" }
+}
+
 
 // MARK: Request data
 
@@ -54,8 +60,8 @@ public struct RequestDataForRandomJoke: WebServiceRequestData {
     
     // WebServiceRequestData conformance
     public var path:          String                      { return WebServicePathBase.chuckNorris + "jokes/random" }
-    public var accept:        String?                     { return WebServiceHeader.genericAccept }
-    public var contentType:   String?                     { return WebServiceHeader.genericContentType }
+    public var acceptHeaders: [String]                    { return [WebServiceHeader.applicationJson] }
+    public var contentType:   String?                     { return WebServiceHeader.applicationJson }
     public var customHeaders: [String : String]?          { return nil }
     public var method:        WebServiceRequestMethod     { return .get }
     public var authorization: WebServiceAuthorizationType { return .none }
@@ -69,11 +75,11 @@ public struct RequestDataForRandomJokes: WebServiceRequestData {
     
     // WebServiceRequestData conformance
     public var path:          String                      { return WebServicePathBase.chuckNorris + "jokes/random/\(numberOfJokes)" }
-    public var accept:        String?                     { return WebServiceHeader.genericAccept }
-    public var contentType:   String?                     { return WebServiceHeader.genericContentType }
+    public var acceptHeaders: [String]                    { return [WebServiceHeader.applicationJson] }
+    public var contentType:   String?                     { return WebServiceHeader.applicationJson }
     public var customHeaders: [String : String]?          { return nil }
     public var method:        WebServiceRequestMethod     { return .get }
-    public var authorization: WebServiceAuthorizationType { return .basicAuth }
+    public var authorization: WebServiceAuthorizationType { return .none }
     public var body:          Json?                       { return nil }
 }
 
@@ -82,10 +88,10 @@ public struct RequestDataForJokeCategories: WebServiceRequestData {
     
     // WebServiceRequestData conformance
     public var path:          String                      { return WebServicePathBase.chuckNorris + "categories" }
-    public var accept:        String?                     { return WebServiceHeader.genericAccept }
-    public var contentType:   String?                     { return WebServiceHeader.genericContentType }
+    public var acceptHeaders: [String]                    { return [WebServiceHeader.applicationJson] }
+    public var contentType:   String?                     { return WebServiceHeader.applicationJson }
     public var customHeaders: [String : String]?          { return nil }
     public var method:        WebServiceRequestMethod     { return .get }
-    public var authorization: WebServiceAuthorizationType { return .basicAuth }
+    public var authorization: WebServiceAuthorizationType { return .none }
     public var body:          Json?                       { return nil }
 }

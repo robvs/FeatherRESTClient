@@ -11,13 +11,48 @@
 import Foundation
 
 
+// MARK: - Data models
+
+/// Container for the data returned by the authentication endpoint.
+/// NOTE: The property names are expected to match the json keys in the response.
+public struct AuthenticationInfo: Codable {
+    
+    var accessToken: String
+    var refreshToken: String
+    var secondsRemaining: Int
+    var roles: [String]
+}
+
+/// Model for the data that is stored in an authorization token.
+public struct WebServiceAuthTokenInfo: Decodable {
+    
+    var userId: String
+    var username: String
+    
+    enum CodingKeys: String, CodingKey {
+        case userId = "uid"
+        case username = "un"
+    }
+}
+
+
 // MARK: - Token managing protocol
 
 typealias AuthorizationTokenResult = (token: String?, error: WebServiceError?)
+
 protocol WebServiceTokenManageable {
     
+    /// The information stored in the authentication token (i.e. user id, user name, etc.).
+    /// Returns nil if there is no auth token.
+    var authTokenInfo: WebServiceAuthTokenInfo? { get }
+    
+    /// Get a valid token for the specified type. If the current token is expired, it is refreshed (if possible)
+    /// before being returned.
     func ensureValidToken(ofType tokenType: WebServiceAuthorizationType,
                           completion: @escaping (AuthorizationTokenResult) -> Void)
+    
+    /// Clear the authentication token as well as the refresh token.
+    func clearAuthToken()
 }
 
 
@@ -26,6 +61,15 @@ protocol WebServiceTokenManageable {
 protocol ReachabilityCheckable {
     
     func isConnected() -> Bool
+}
+
+protocol TokenPersisting {
+    
+    func isCloseToExpiration() -> Bool
+    func getAuthToken() -> String?
+    func getSessionModel() -> WebServiceSessionModel?
+    func saveSessionModel(_ session: WebServiceSessionModel)
+    func clearAuthToken()
 }
 
 
@@ -37,28 +81,34 @@ public enum WebServiceRequestState {
     case started
     case completeWithoutError
     case completeWithError(message: String)
+    
+    var isStarted: Bool {
+        switch self {
+        case .started:
+            return true
+        default:
+            return false
+        }
+    }
 }
 
 /// Information that is required by the caller to perform a web services request.
 public protocol WebServiceRequestData {
     
-    var path:          String                      { get }
-    var accept:        String?                     { get }
-    var contentType:   String?                     { get }
+    var path:          String   { get }
+    var acceptHeaders: [String] { get }
+    var contentType:   String?  { get }
     var customHeaders: [String : String]?          { get }
     var method:        WebServiceRequestMethod     { get }
     var authorization: WebServiceAuthorizationType { get }
-    var body:          Json?                       { get }
+    var body:          Json?   { get }
 }
 
 /// Web service request standard header values
 public struct WebServiceHeader {
     
-    static var acceptKey:          String { return "Accept" }
-    static var genericAccept:      String { return "application/json" }
-    static var contentTypeKey:     String { return "Content-Type" }
-    static var genericContentType: String { return "application/json" }
-    static var apiTokenKey:        String { return "api-token" }
+    static var applicationJson: String { return "application/json" }
+    static var textCsv: String { return "text/csv" }
 }
 
 /// Types of results that can be returned by a service call.
@@ -67,10 +117,13 @@ public enum WebServiceResult<Model> {
     case failure(WebServiceError?)
 }
 
+/// Result model type used for requests that return no data
+public struct WebServiceEmptyResultModel: Decodable { }
+
 /// Type of authorizations that are supported.
 public enum WebServiceAuthorizationType {
     case none
-    case basicAuth
+    case authToken
 }
 
 /// Reqeust types that are supported. Note that the raw value is used set the method value in the URLRequest.
@@ -80,9 +133,8 @@ public enum WebServiceRequestMethod: String {
     case put  = "PUT"
 }
 
-/// Base path to support web services.
-struct WebServicePathBase {
-    static var chuckNorris: String { return "https://api.icndb.com/" }
-    static var firebase:    String { return "https://firebasestorage.googleapis.com/v0/b/featherrestclient.appspot.com/o/" }
+struct WebServiceHeaderKey {
+    static var contentType:   String { return "Content-Type" }
+    static var accept:        String { return "Accept" }
+    static var authorization: String { return "Authorization" }
 }
-

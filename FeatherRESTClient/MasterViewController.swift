@@ -17,6 +17,7 @@ class MasterViewController: UITableViewController {
     var detailViewController: DetailViewController? = nil
 	var jokes = [Joke]()
 
+    private let tokenStorage: TokenPersisting? = nil
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -99,25 +100,28 @@ private extension MasterViewController {
         
         spinner.startAnimating()
         
-        let requestData = RequestDataForAuthenticate(userId: "user-id", password: "passme")
-        JsonWebService.shared.sendRequest(requestData) { [weak self] (authResponse: WebServiceResult<AuthenticationInfo>) in
-            
-            self?.spinner.stopAnimating()
-            
-            switch authResponse {
-            case .success(let authInfo):
-                if let authInfo = authInfo {
-                    BasicAuthManager.shared.update(apiToken: authInfo.apiToken, secondsRemaining: authInfo.secondsRemaining)
-                }
-                
-                completion(true)
-                
-            case .failure(let webServiceError):
-                print("\(#file)-\(#function) request error: ", webServiceError?.friendlyDescription ?? "unknown")
-                
-                completion(true)
-            }
-        }
+        // TODO: Update `RequestDataForAuthenticate` with the path to the auth server.
+        completion(true)
+        return
+//        let requestData = RequestDataForAuthenticate(username: "user-id", password: "passme")
+//        JsonWebService.shared.sendRequest(requestData) { [weak self] (authResponse: WebServiceResult<AuthenticationInfo>) in
+//
+//            self?.spinner.stopAnimating()
+//
+//            switch authResponse {
+//            case .success(let authInfo):
+//                if let authInfo = authInfo {
+//                    self?.updateTokenStorage(with: authInfo)
+//                }
+//
+//                completion(true)
+//
+//            case .failure(let webServiceError):
+//                print("\(#file)-\(#function) request error: ", webServiceError?.friendlyDescription ?? "unknown")
+//
+//                completion(true)
+//            }
+//        }
     }
     
     func requestRandomJokes() {
@@ -142,6 +146,15 @@ private extension MasterViewController {
                 self?.tableView.reloadData()
             }
         }
+    }
+    
+    func updateTokenStorage(with authenticationInfo: AuthenticationInfo) {
+        
+        let expirationTime = Date().addingTimeInterval(Double(authenticationInfo.secondsRemaining))
+        let session = WebServiceSessionModel(authToken: authenticationInfo.accessToken,
+                                             refreshToken: authenticationInfo.refreshToken,
+                                             expirationTime: expirationTime)
+        tokenStorage?.saveSessionModel(session)
     }
 }
 

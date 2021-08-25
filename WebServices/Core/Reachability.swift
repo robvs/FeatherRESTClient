@@ -12,12 +12,13 @@ import SystemConfiguration
 
 
 /// Helper that checks for a viable internet connection.
+/// This code came from https://stackoverflow.com/questions/30743408/check-for-internet-connection-with-swift
 public class Reachability {
     
     /// Singleton
     static let shared = Reachability()
     
-    /// Private default init to enfore singleton pattern
+    /// Private default init to enforce singleton pattern
     private init() {}
 }
 
@@ -26,8 +27,6 @@ public class Reachability {
 
 extension Reachability: ReachabilityCheckable {
     
-    /// Return `true` if we are currently connected to the internet/network.
-    /// This code came from https://stackoverflow.com/questions/30743408/check-for-internet-connection-with-swift
     func isConnected() -> Bool {
         
         var zeroAddress = sockaddr_in(sin_len: 0, sin_family: 0, sin_port: 0, sin_addr: in_addr(s_addr: 0), sin_zero: (0, 0, 0, 0, 0, 0, 0, 0))
@@ -51,21 +50,5 @@ extension Reachability: ReachabilityCheckable {
         let ret = (isReachable && !needsConnection)
         
         return ret
-    }
-}
-
-
-
-// MARK: - FakeReachability
-
-/// This class is used to provide hard-coded responses to help with testing
-/// when the web servie is not available.
-final class FakeReachability {
-}
-
-extension FakeReachability: ReachabilityCheckable {
-    
-    func isConnected() -> Bool {
-        return true
     }
 }

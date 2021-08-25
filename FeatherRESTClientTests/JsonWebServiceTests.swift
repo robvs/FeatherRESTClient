@@ -11,14 +11,14 @@
 import XCTest
 
 class JsonWebServiceTests: XCTestCase {
-    
-    let expectedUserApiToken = "auth-token"
+
+    let expectedAuthToken = "auth-token"
     
     // mock object that are expected to be initialized by each test that uses them.
     var mockSession:      MockURLSession!             = nil
     var mockTokenManager: MockWebServiceTokenManager! = nil
     var mockReachability: MockReachability!           = nil
-    
+
     
     override func setUp() {
         super.setUp()
@@ -50,10 +50,10 @@ class JsonWebServiceTests: XCTestCase {
         testAuthorization(.none)
     }
     
-    func test_sendRequest_userApiAuthorization() {
-        testAuthorization(.basicAuth)
+    func test_sendRequest_authTokenAuthorization() {
+        testAuthorization(.authToken)
     }
-    
+
     func test_sendRequest_noErrors() {
         
         // setup
@@ -64,8 +64,8 @@ class JsonWebServiceTests: XCTestCase {
         
         let requestData = createRequestInfo(method: .get, authorization: .none)
         let expectation = self.expectation(description: "async_test")
-        
-        
+
+
         // execute
         JsonWebService.shared.sendRequest(requestData) { (serviceResult: WebServiceResult<SimpleModel>) in
             
@@ -93,10 +93,10 @@ class JsonWebServiceTests: XCTestCase {
         let expectedError = WebServiceError.urlSession(error: baseError)
         let model         = SimpleModel(value1: 411, value2: "Starlord")
         resetJsonWebService(returnedData: model.toJsonData(), dataTaskError: baseError, tokenError: nil, isConnected: true)
-        
+
         let requestData = createRequestInfo(method: .get, authorization: .none)
         let expectation = self.expectation(description: "async_test")
-        
+
         
         // execute
         JsonWebService.shared.sendRequest(requestData) { (serviceResult: WebServiceResult<SimpleModel>) in
@@ -114,7 +114,7 @@ class JsonWebServiceTests: XCTestCase {
         
         waitForExpectations(timeout: 2, handler: nil)
     }
-    
+
     func test_sendRequest_tokenError() {
         
         // setup
@@ -125,9 +125,9 @@ class JsonWebServiceTests: XCTestCase {
         let model         = SimpleModel(value1: 411, value2: "Starlord")
         resetJsonWebService(returnedData: model.toJsonData(), dataTaskError: nil, tokenError: baseError, isConnected: true)
         
-        let requestData = createRequestInfo(method: .get, authorization: .basicAuth)
+        let requestData = createRequestInfo(method: .get, authorization: .authToken)
         let expectation = self.expectation(description: "async_test")
-        
+
         
         // execute
         JsonWebService.shared.sendRequest(requestData) { (serviceResult: WebServiceResult<SimpleModel>) in
@@ -156,7 +156,7 @@ class JsonWebServiceTests: XCTestCase {
         
         let requestData = createRequestInfo(method: .get, authorization: .none)
         let expectation = self.expectation(description: "async_test")
-        
+
         
         // execute
         JsonWebService.shared.sendRequest(requestData) { (serviceResult: WebServiceResult<SimpleModel>) in
@@ -174,7 +174,7 @@ class JsonWebServiceTests: XCTestCase {
         
         waitForExpectations(timeout: 2, handler: nil)
     }
-    
+
     func test_sendRequest_invalidUrl() {
         
         // setup
@@ -184,13 +184,13 @@ class JsonWebServiceTests: XCTestCase {
         resetJsonWebService(returnedData: model.toJsonData(), dataTaskError: nil, tokenError: nil, isConnected: true)
         
         let requestData = WebServiceRequestInfo(path: "bad url string",
-                                                accept: nil,
+                                                acceptHeaders: [],
                                                 contentType: nil,
                                                 customHeaders: nil,
                                                 method: .get,
                                                 authorization: .none,
                                                 body: nil)
-        
+
         let expectation = self.expectation(description: "async_test")
         
         
@@ -210,7 +210,7 @@ class JsonWebServiceTests: XCTestCase {
         
         waitForExpectations(timeout: 2, handler: nil)
     }
-    
+
     func test_sendRequest_invalidResponseCode() {
         
         // setup
@@ -247,15 +247,14 @@ class JsonWebServiceTests: XCTestCase {
         
         waitForExpectations(timeout: 2, handler: nil)
     }
-    
+
     func test_sendRequest_invalidResponseDataFormat() {
         
         // setup
         
         // inject mock data into the JsonWebService instance
-        let model = SimpleModel(value1: 411, value2: "Starlord")
-        resetJsonWebService(returnedData: model.toJsonData(), dataTaskError: nil, tokenError: nil, isConnected: true)
-        mockSession.data = "this is not json".data(using: .utf8)
+        let returnedData = "this is not json".data(using: .utf8)
+        resetJsonWebService(returnedData: returnedData, dataTaskError: nil, tokenError: nil, isConnected: true)
         
         let requestData = createRequestInfo(method: .get, authorization: .none)
         let expectation = self.expectation(description: "async_test")
@@ -282,6 +281,40 @@ class JsonWebServiceTests: XCTestCase {
         
         waitForExpectations(timeout: 2, handler: nil)
     }
+    
+    func test_sendRequest_csvResponseData() {
+        
+        // setup
+        
+        // inject mock data into the JsonWebService instance
+        let expectedData = "\"csv\",\"data\""
+        resetJsonWebService(returnedData: expectedData.data(using: .utf8),
+                            headers: ["Content-Type" : "text/csv"],
+                            dataTaskError: nil,
+                            tokenError: nil,
+                            isConnected: true)
+        
+        let requestData = createRequestInfo(method: .get, authorization: .none, acceptHeaders: ["text/csv"])
+        let expectation = self.expectation(description: "async_test")
+
+
+        // execute
+        JsonWebService.shared.sendRequest(requestData) { (serviceResult: WebServiceResult<String>) in
+            
+            // validate
+            switch serviceResult {
+            case .success(let actualData):
+                XCTAssertEqual(actualData, expectedData)
+                
+            case .failure(let error):
+                XCTFail("Expected success, but received failure with error: \(error?.localizedDescription ?? "none")")
+            }
+            
+            expectation.fulfill()
+        }
+        
+        waitForExpectations(timeout: 2, handler: nil)
+    }
 }
 
 
@@ -299,7 +332,7 @@ private extension JsonWebServiceTests {
         
         let requestData = createRequestInfo(method: method, authorization: .none)
         let expectation = self.expectation(description: "async_test")
-        
+
         
         // execute1
         JsonWebService.shared.sendRequest(requestData) { [weak self] (serviceResult: WebServiceResult<SimpleModel>) in
@@ -323,19 +356,19 @@ private extension JsonWebServiceTests {
         
         let requestData = createRequestInfo(method: .get, authorization: authorization)
         let expectation = self.expectation(description: "async_test")
-        
+
         
         // execute
-        JsonWebService.shared.sendRequest(requestData) { [weak self] (serviceResult: WebServiceResult<SimpleModel>) in
+        JsonWebService.shared.sendRequest(requestData) { [unowned self] (serviceResult: WebServiceResult<SimpleModel>) in
             
             // validate
-            if let actualHeaders = self?.mockSession.resultingUrlRequest?.allHTTPHeaderFields {
+            if let actualHeaders = self.mockSession.resultingUrlRequest?.allHTTPHeaderFields {
                 switch authorization {
                 case .none:
-                    XCTAssertNil(actualHeaders[WebServiceHeader.apiTokenKey])
-                case .basicAuth:
-                    if let actualToken = actualHeaders[WebServiceHeader.apiTokenKey] {
-                        XCTAssertEqual(actualToken, self?.expectedUserApiToken)
+                    XCTAssertNil(actualHeaders[WebServiceHeaderKey.authorization])
+                case .authToken:
+                    if let actualToken = actualHeaders[WebServiceHeaderKey.authorization] {
+                        XCTAssertEqual(actualToken, "Bearer " + self.expectedAuthToken)
                     }
                     else {
                         XCTFail("apiToken expected in header but was nil.")
@@ -351,11 +384,15 @@ private extension JsonWebServiceTests {
         
         waitForExpectations(timeout: 2, handler: nil)
     }
-    
-    func resetJsonWebService(returnedData: Data?, dataTaskError: Error?, tokenError: Error?, isConnected: Bool) {
+
+    func resetJsonWebService(returnedData: Data?,
+                             headers: [String : String]? = nil,
+                             dataTaskError: Error?,
+                             tokenError: Error?,
+                             isConnected: Bool) {
         
-        let token        = tokenError == nil ? expectedUserApiToken : nil
-        mockSession      = MockURLSession(data: returnedData, error: dataTaskError)
+        let token        = tokenError == nil ? expectedAuthToken : nil
+        mockSession      = MockURLSession(data: returnedData, headers: headers, error: dataTaskError)
         mockTokenManager = MockWebServiceTokenManager(token: token, error: tokenError)
         mockReachability = MockReachability(response: isConnected)
         
@@ -366,10 +403,11 @@ private extension JsonWebServiceTests {
     }
     
     func createRequestInfo(method: WebServiceRequestMethod,
-                           authorization: WebServiceAuthorizationType) -> WebServiceRequestInfo {
+                           authorization: WebServiceAuthorizationType,
+                           acceptHeaders: [String] = []) -> WebServiceRequestInfo {
         
         return WebServiceRequestInfo(path: "http://does.not.matter",
-                                     accept: nil,
+                                     acceptHeaders: acceptHeaders,
                                      contentType: nil,
                                      customHeaders: nil,
                                      method: method,
@@ -383,4 +421,3 @@ private extension JsonWebServiceTests {
         return NSError(domain: "json.web.service.test", code: -1, userInfo: errorUserInfo)
     }
 }
-

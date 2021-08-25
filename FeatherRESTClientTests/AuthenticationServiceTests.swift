@@ -24,8 +24,9 @@ class AuthenticationServiceTests: XCTestCase {
         
         // setup
         let secondsRemaining = 900
-        let apiToken         = "api-token"
-        let jsonString       = "{ \"secondsRemaining\": \(secondsRemaining), \"apiToken\": \"\(apiToken)\" }"
+        let accessToken      = "access-token"
+        let refreshToken     = "refresh-token"
+        let jsonString       = "{ \"secondsRemaining\": \(secondsRemaining), \"accessToken\": \"\(accessToken)\", \"refreshToken\": \"\(refreshToken)\", \"roles\": [] }"
         let jsonData         = jsonString.data(using: .utf8)!
         let decoder          = JSONDecoder()
 
@@ -34,7 +35,7 @@ class AuthenticationServiceTests: XCTestCase {
             let model = try decoder.decode(AuthenticationInfo.self, from: jsonData)
             
             XCTAssertEqual(model.secondsRemaining, secondsRemaining)
-            XCTAssertEqual(model.apiToken, apiToken)
+            XCTAssertEqual(model.accessToken, accessToken)
         }
         catch {
             if let decodingError = error as? DecodingError {
@@ -49,8 +50,8 @@ class AuthenticationServiceTests: XCTestCase {
     func test_decode_missingSecondsRemaining() {
         
         // setup
-        let apiToken         = "api-token"
-        let jsonString       = "{ \"apiToken\": \"\(apiToken)\" }"
+        let accessToken      = "access-token"
+        let jsonString       = "{ \"accessToken\": \"\(accessToken)\" }"
         let jsonData         = jsonString.data(using: .utf8)!
         let decoder          = JSONDecoder()
         
