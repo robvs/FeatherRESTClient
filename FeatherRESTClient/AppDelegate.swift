@@ -10,7 +10,8 @@
 
 import UIKit
 
-let thisAppErrorDomain = "com.randomvisual.feather-rest-client"
+let thisAppErrorDomain = "com.randomvisual.FeatherRESTClient"
+let logger = QuikLogger()
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
@@ -29,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         #else
             let configuration = URLSessionConfiguration.default
             let thisSession = URLSession(configuration: configuration) as URLSessionManageable
-            let tokenManager = WebServiceTokenManager()
+            let tokenManager = WebServiceTokenManager(tokenStorage: TokenStorage())
             let reachability = Reachability.shared
         #endif
         JsonWebService.resetSharedInstance(session: thisSession, tokenManager: tokenManager, reachability: reachability)

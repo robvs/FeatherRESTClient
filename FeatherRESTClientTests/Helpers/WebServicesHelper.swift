@@ -19,15 +19,67 @@ struct SimpleModel: Codable {
     
     func toJsonData() -> Data {
         
-        let encoder = JSONEncoder()
-        do {
-            let jsonData = try encoder.encode(self)
+        if let jsonData = JsonUtil.toData(model: self) {
             return jsonData
         }
-        catch {
-            assertionFailure("Converting SimpleModel to json data failed. This shouldn't happen.")
+        else {
+            logger.fatal("Converting SimpleModel to json data failed. This shouldn't happen.")
             return Data()
         }
+    }
+}
+
+
+// MARK: - JsonWebService helpers
+
+struct JsonWebServiceTestUtil {
+    
+    static func resetSingleton(returnedData: Data?,
+                               tokenUsername: String?,
+                               headers: [String : String]? = nil,
+                               dataTaskError: Error? = nil,
+                               responseCode: Int = 200,
+                               taskDelayMs: Int = 0) {
+        
+        let token = tokenUsername != nil ? createToken(withUsername: tokenUsername!) : nil
+        let mockUrlSession   = MockURLSession(data: returnedData,
+                                              headers: headers,
+                                              error: dataTaskError,
+                                              responseCode: responseCode,
+                                              taskDelayMs: taskDelayMs)
+        let mockTokenManager = MockWebServiceTokenManager(token: token, error: nil)
+        let mockReachability = MockReachability(response: true)
+        
+        // ensure that this test doesn't make any real service calls or check the real reachability
+        JsonWebService.resetSharedInstance(session: mockUrlSession,
+                                           tokenManager: mockTokenManager,
+                                           reachability: mockReachability)
+    }
+    
+    static func createToken(withUsername username: String) -> String {
+        
+        let unencodedCore = """
+{
+    "uid": "3261b318-2cdf-4245-82e1-675b6ac3daf2",
+    "un": "\(username)",
+    "exp": 1549304270,
+    "rls": [
+        "Telehealth",
+        "DeviceManagement",
+        "ObserverAccess",
+        "ViewEditor"
+        ],
+    "id": "241728b0-3ab1-4ec2-8559-4ed93ba0a008"
+}
+"""
+        guard let encodedCore = unencodedCore.data(using: .utf8)?.base64EncodedString() else {
+            return "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiIzMjYxYjMxOC0yY2RmLTQyNDUtODJlMS02NzViNmFjM2RhZjI" +
+                   "iLCJ1biI6Impva290by50ZXN0MyIsImV4cCI6MTU0OTMwNDI3MCwicmxzIjpbIlRlbGVoZWFsdGgiLCJEZXZpY2VNYW5hZ2V" +
+                   "tZW50IiwiT2JzZXJ2ZXJBY2Nlc3MiLCJWaWV3RWRpdG9yIl0sImlkIjoiMjQxNzI4YjAtM2FiMS00ZWMyLTg1NTktNGVkOTN" +
+                   "iYTBhMDA4In0.GtozfgXHk5rR4k9YVHChArqmUlv4GXuOl4VpguqrRys"
+        }
+        
+        return "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." + encodedCore + ".GtozfgXHk5rR4k9YVHChArqmUlv4GXuOl4VpguqrRys"
     }
 }
 
@@ -37,7 +89,7 @@ struct SimpleModel: Codable {
 struct WebServiceRequestInfo: WebServiceRequestData {
     
     var path: String
-    var accept: String?
+    var acceptHeaders: [String]
     var contentType: String?
     var customHeaders: [String : String]?
     var method: WebServiceRequestMethod
@@ -51,14 +103,18 @@ struct WebServiceRequestInfo: WebServiceRequestData {
 class MockURLSession {
     
     var data: Data?
+    let headers: [String : String]?
     var error: Error?
     var responseCode: Int
+    var taskDelayMs: Int    // delay in milliseconds
     private (set) var resultingUrlRequest: URLRequest? = nil
     
-    init(data: Data?, error: Error?, responseCode: Int = 200) {
+    init(data: Data?, headers: [String : String]?, error: Error?, responseCode: Int = 200, taskDelayMs: Int = 0) {
         self.data = data
+        self.headers = headers
         self.error = error
         self.responseCode = responseCode
+        self.taskDelayMs = taskDelayMs
         resultingUrlRequest = nil
     }
 }
@@ -75,8 +131,10 @@ extension MockURLSession: URLSessionManageable {
         resultingUrlRequest = request
         return MockURLSessionDataTask(data: data,
                                       code: responseCode,
+                                      headers: headers,
                                       error: error,
-                                      completionHandler: completionHandler)
+                                      delay: taskDelayMs,
+                                      completion: completionHandler)
     }
 }
 
@@ -86,32 +144,57 @@ class MockURLSessionDataTask: URLSessionDataTask {
     
     let responseData: Data?
     let responseCode: Int
+    let responseHeaders: [String : String]?
     let responseError: Error?
+    let responseDelay: Int    // delay in milliseconds
     let sessionCompletionHandler: (Data?, URLResponse?, Error?) -> Void
     
-    init(data: Data?, code: Int, error: Error?, completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void) {
+    init(data: Data?, code: Int, headers: [String : String]?, error: Error?, delay: Int, completion: @escaping (Data?, URLResponse?, Error?) -> Void) {
+        
         responseData = data
         responseCode = code
+        responseHeaders = headers
         responseError = error
-        sessionCompletionHandler = completionHandler
+        responseDelay = delay
+        sessionCompletionHandler = completion
     }
     
     override func resume() {
+        
         let urlResponse = HTTPURLResponse(url: URL(fileURLWithPath:"http://something.com"),
                                           statusCode: responseCode,
                                           httpVersion: nil,
-                                          headerFields: nil)
-        sessionCompletionHandler(responseData, urlResponse, responseError)
+                                          headerFields: responseHeaders)
+        
+        // create local references to instance properties in case this instance goes out of scope
+        // before the deadline.
+        let completion = sessionCompletionHandler
+        let data = responseData
+        let error = responseError
+        
+        let deadline = DispatchTime.now() + DispatchTimeInterval.milliseconds(responseDelay)
+        DispatchQueue.main.asyncAfter(deadline: deadline) {
+            completion(data, urlResponse, error)
+        }
     }
 }
 
-
 // MARK: - Mock implementation of WebServiceTokenManageable
 
-struct MockWebServiceTokenManager: WebServiceTokenManageable {
+final class MockWebServiceTokenManager: WebServiceTokenManageable {
     
-    let token: String?
+    private (set) var token: String?
     let error: Error?
+    
+    init(token: String?, error: Error?) {
+        
+        self.token = token
+        self.error = error
+    }
+    
+    var authTokenInfo: WebServiceAuthTokenInfo? {
+        return decodeAuthToken(token)
+    }
     
     func ensureValidToken(ofType tokenType: WebServiceAuthorizationType,
                           completion: @escaping (AuthorizationTokenResult) -> Void) {
@@ -119,11 +202,36 @@ struct MockWebServiceTokenManager: WebServiceTokenManageable {
         switch tokenType {
         case .none:
             completion((token: nil, error: nil))
-        case .basicAuth:
+        case .authToken:
             let tokenError: WebServiceError? = error != nil ? .token(error: error) : nil
             completion((token: token, error: tokenError))
         }
     }
+    
+    func clearAuthToken() {
+        token = nil
+    }
+    
+    private func decodeAuthToken(_ authToken: String?) -> WebServiceAuthTokenInfo? {
+        
+        guard let authToken = authToken else { return nil }
+        
+        let segments = authToken.components(separatedBy: ".")
+        guard segments.count == 3 else { return nil }
+        
+        var base64String = segments[1]
+        
+        // add padding to the base64 string if necessary.
+        if base64String.count % 4 != 0 {
+            let padlen = 4 - base64String.count % 4
+            base64String.append(contentsOf: repeatElement("=", count: padlen))
+        }
+        
+        guard let tokenData = Data(base64Encoded: base64String) else { return nil }
+        
+        return JsonUtil.toModel(jsonData: tokenData)
+    }
+
 }
 
 

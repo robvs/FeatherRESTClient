@@ -10,15 +10,7 @@
 import Foundation
 
 
-// MARK: - Data model
-
-/// Container for the data returned by the api/session endpoint.
-/// NOTE: The property names are expected to match the json keys in the response.
-public struct AuthenticationInfo: Codable {
-    
-    var secondsRemaining: Int
-    var apiToken: String
-}
+import Foundation
 
 
 // MARK: Request data
@@ -26,32 +18,36 @@ public struct AuthenticationInfo: Codable {
 /// Authentication and user session handling.
 public struct RequestDataForAuthenticate: WebServiceRequestData {
     
-    public let userId:   String
+    public let username: String
     public let password: String
-    
+    private let pathUrl = URL(string: "https://path.to.auth.url/")!
+
     // WebServiceRequestData conformance
-    public var path:          String                      { return WebServicePathBase.firebase + "authenticate.json?alt=media&token=e38b7558-fed3-4573-8994-91b52b91c9be" }
-    public var accept:        String?                     { return WebServiceHeader.genericAccept }
-    public var contentType:   String?                     { return nil }
+    public var path:          String                      { return pathUrl.absoluteString }
+    public var acceptHeaders: [String]                    { return [WebServiceHeader.applicationJson] }
+    public var contentType:   String?                     { return WebServiceHeader.applicationJson }
     public var customHeaders: [String : String]?          { return nil }
-    public var method:        WebServiceRequestMethod     { return .get }   // this would normally be a POST, but we're using a dummy endpoint.
+    public var method:        WebServiceRequestMethod     { return .post }
     public var authorization: WebServiceAuthorizationType { return .none }
     
-    // NOTE: The body would normally include the username and password, but it must be nil here
-    //       since we're only using a dummy endpoint.
-//    public var body: Json? { return ["Username" : userId, "Password" : password, "Type" : "Domain"] }
-    public var body: Json? { return nil }
+    public var body: Json? { return ["username" : username, "password" : password, "type" : "Domain"] }
 }
 
 /// Authentication and user session handling.
-public struct RequestDataForRenewToken: WebServiceRequestData {
+public struct RequestDataForRefreshToken: WebServiceRequestData {
     
+    public let sessionInfo: WebServiceSessionModel
+    private let pathUrl = URL(string: "https://path.to.refresh.url/")!
+
     // WebServiceRequestData conformance
-    public var path:          String                      { return WebServicePathBase.firebase + "authenticate.json?alt=media&token=e38b7558-fed3-4573-8994-91b52b91c9be" }
-    public var accept:        String?                     { return WebServiceHeader.genericAccept }
-    public var contentType:   String?                     { return nil }
+    public var path:          String                      { return pathUrl.absoluteString }
+    public var acceptHeaders: [String]                    { return [WebServiceHeader.applicationJson] }
+    public var contentType:   String?                     { return WebServiceHeader.applicationJson }
     public var customHeaders: [String : String]?          { return nil }
-    public var method:        WebServiceRequestMethod     { return .get }   // this would normally be a POST or PUT
+    public var method:        WebServiceRequestMethod     { return .post }
     public var authorization: WebServiceAuthorizationType { return .none }
-    public var body: Json? { return nil }
+    
+    public var body: Json? {
+        return ["accessToken" : sessionInfo.authToken, "refreshToken" : sessionInfo.refreshToken]
+    }
 }

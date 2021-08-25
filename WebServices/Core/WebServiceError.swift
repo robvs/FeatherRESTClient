@@ -26,15 +26,15 @@ public enum WebServiceError: Error {
     var friendlyDescription: String {
         switch self {
         case .unexpected:
-            return "An unexpected service error occurred. Please contact support if this error continues."
+            return "An unexpected service error occurred. Please contact tech support if this error continues."
         case .noConnection:
             return "There is no network connection. Please connect to continue."
         case .urlPath:
-            return "An internal service error occurred. Please contact support if this error continues."
+            return "An internal service error occurred. Please contact tech support if this error continues."
         case .token:
             return "An authentication error occurred. Please sign-out then sign back in."
         case .serverResponse:
-            return "An unexpected service response was received. Please contact support if this error continues."
+            return "An unexpected service response was received. Please contact tech support if this error continues."
         case .statusCode(let statusCode):
             switch statusCode {
             case 200...299:
@@ -42,16 +42,38 @@ public enum WebServiceError: Error {
             case 401, 403:
                 return "Authorization failed. Please sign in with a valid user id and password."
             default:
-                return "A server error occurred (\(statusCode)). Please contact support if this error continues."
+                return "A server error occurred (\(statusCode)). Please contact tech support if this error continues."
             }
         case .responseData:
-            return "An unexpected response was received. Please contact support if this error continues."
+            return "An unexpected response was received. Please contact tech support if this error continues."
         case .urlSession:
-            return "A service error occurred. Please contact support if this error continues."
+            return "A service error occurred. Please contact tech support if this error continues."
+        }
+    }
+    
+    var localizedDescription: String {
+        switch self {
+        case .unexpected, .noConnection, .urlPath, .serverResponse, .statusCode:
+            return friendlyDescription
+        case .token(let error):
+            return error?.localizedDescription ?? friendlyDescription
+        case .responseData(let error):
+            return error?.localizedDescription ?? friendlyDescription
+        case .urlSession(let error):
+            return error?.localizedDescription ?? friendlyDescription
         }
     }
 }
 
+// MARK: - LocalizedError conformance
+extension WebServiceError: LocalizedError {
+    
+    public var errorDescription: String? {
+        return localizedDescription
+    }
+}
+
+// MARK: - Equatable conformance
 extension WebServiceError: Equatable {
     
     public static func ==(lhs: WebServiceError, rhs: WebServiceError) -> Bool {

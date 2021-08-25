@@ -11,10 +11,16 @@
 import Foundation
 
 
-// MARK: - Protocols & typealiases to support JSON web service requests.
+// MARK: - Models & Protocols
 
-/// type def that represents a json dictionary
-public typealias Json = [String : Any]
+/// Generic error model that is returned by the Admin Service.
+public struct AdminServiceErrorModel: Codable {
+    
+    var requestPath: String
+    var requestMethod: String
+    var message: String?
+    var statusCode: Int
+}
 
 /// type def that represents a json service response block.
 public typealias JsonWebServiceResponseBlock<Model: Decodable> = (_ result: WebServiceResult<Model>) -> Void
@@ -22,22 +28,32 @@ public typealias JsonWebServiceResponseBlock<Model: Decodable> = (_ result: WebS
 /// Implemented by classes that make JSON web service calls.
 public protocol JsonWebServiceable {
     
+    /// The information stored in the authentication token (i.e. user id, user name, etc.).
+    /// Returns nil if there is no auth token.
+    var authTokenInfo: WebServiceAuthTokenInfo? { get }
+
     /// Send a web service request where a JSON response is expected.
     func sendRequest<Model: Decodable>(_ webRequestData: WebServiceRequestData,
                                        completion: @escaping JsonWebServiceResponseBlock<Model>)
 }
 
+/// Implemented by objects that can convert themselves to a JSON dictionary.
+protocol JsonConvertable {
+    
+    func toJson() -> Json
+}
+
 
 // MARK: - Class core
 
-/// A `JsonWebServiceable` implementation that handles json-based services.
+/// A WebService implementation that handles json-based services.
 final public class JsonWebService {
     
     /// Singleton
     /// This is initialized by resetSharedInstance(), which is expected to be called at startup.
     public private (set) static var shared: JsonWebService!
     
-    private let session:      URLSessionManageable
+    private let session: URLSessionManageable
     private let tokenManager: WebServiceTokenManageable
     private let reachability: ReachabilityCheckable
     
@@ -69,11 +85,18 @@ final public class JsonWebService {
 
 extension JsonWebService: JsonWebServiceable {
     
+    public var authTokenInfo: WebServiceAuthTokenInfo? { return tokenManager.authTokenInfo }
+    
+    /// Clear the auth token. e.g. log out the user.
+    public func logOutUser() {
+        
+        tokenManager.clearAuthToken()
+    }
+    
     /// Perform a web service request using the given endpoint information.
-    /// - parameters:
-    ///   - webRequestData: Information on the endpoint that we're about to hit.
-    ///   - completion:     The block to be executed upon completion of the request.
-    ///                     This block is guaranteed to be executed on the main queue
+    /// - parameter webRequest: Information on the endpoint that we're about to hit.
+    /// - parameter completion: The block to be executed upon completion of the request.
+    ///                         This block is guaranteed to be executed on the main queue
     public func sendRequest<Model: Decodable>(_ webRequestData: WebServiceRequestData,
                                               completion: @escaping (WebServiceResult<Model>) -> Void) {
         
@@ -108,10 +131,9 @@ extension JsonWebService: JsonWebServiceable {
                 return
             }
             
-            // this is called when the web request completes.
             let dataTaskCompletion: (Data?, URLResponse?, Error?) -> Void = { (data, response, error) in
                 if let error = error {
-                    print("\(#file) - \(#function) data task error: \(error.localizedDescription)")
+                    logger.trace("Data task error: \(error.localizedDescription)")
                 }
                 
                 // ensure that the completion block is always executed on the main queue
@@ -133,15 +155,15 @@ extension JsonWebService: JsonWebServiceable {
 private extension JsonWebService {
     
     /// Create a URLRequest object that is based on the information given in the webRequest.
-    /// - parameters:
-    ///   - webRequestData: The information upon which the created request is based.
-    ///   - completion:     Block that is called upon completion.
+    /// - parameter from:       The information upon which the created request is based.
+    /// - parameter completion: Block that is called upon completion.
     typealias CreateRequestResult = (request: URLRequest?, error: WebServiceError?)
     func createRequest(from webRequestData: WebServiceRequestData,
                        authorizationToken: String?) -> CreateRequestResult {
         
         // is the url path valid?
         guard let url = URL(string: webRequestData.path) else {
+            logger.error("Not a valid URL path: \(webRequestData.path)")
             return (request: nil, error: WebServiceError.urlPath)
         }
         
@@ -152,6 +174,7 @@ private extension JsonWebService {
                 requestBody = jsonData
             }
             else {
+                logger.error("JSON could not be converted into a Data object.")
                 return (request: nil, error: WebServiceError.unexpected)
             }
         }
@@ -166,23 +189,33 @@ private extension JsonWebService {
         }
         
         if let contentType = webRequestData.contentType {
-            request.addValue(contentType, forHTTPHeaderField: WebServiceHeader.contentTypeKey)
+            request.addValue(contentType, forHTTPHeaderField: WebServiceHeaderKey.contentType)
+        }
+        else {
+            request.addValue("application/json", forHTTPHeaderField: WebServiceHeaderKey.contentType)
         }
         
-        if let accept = webRequestData.accept {
-            request.addValue(accept, forHTTPHeaderField: WebServiceHeader.acceptKey)
+        if webRequestData.acceptHeaders.count > 0 {
+            webRequestData.acceptHeaders.forEach { (acceptHeader) in
+                request.addValue(acceptHeader, forHTTPHeaderField: WebServiceHeaderKey.accept)
+            }
         }
-        
+        else {
+            request.addValue("application/json", forHTTPHeaderField: WebServiceHeaderKey.accept)
+        }
+
+        // add token to the header if needed.
         switch webRequestData.authorization {
         case .none:
             break
-        case .basicAuth:
+        case .authToken:
             if let authorizationToken = authorizationToken {
-                request.addValue(authorizationToken, forHTTPHeaderField: WebServiceHeader.apiTokenKey)
+                let bearerToken = "Bearer \(authorizationToken)"
+                request.addValue(bearerToken, forHTTPHeaderField: WebServiceHeaderKey.authorization)
             }
             else {
                 // This should theoretically never happen.
-                assertionFailure("Authorization type \(webRequestData.authorization) requested, but token is nil.")
+                logger.fatal("Authorization type \(webRequestData.authorization) requested, but token is nil.")
             }
         }
 
@@ -197,45 +230,43 @@ private extension JsonWebService {
     
     /// Check that we are authorized to make the request. For api-token authorization, this
     /// will renew the token if necessary.
-    /// - parameters:
-    ///   - authorizationType: The type of authorization required by the request.
-    ///   - completion:        Block that is called upon completion.
+    /// - parameter authorizationType: The type of authorization required by the request.
+    /// - parameter completion:        Block that is called upon completion.
     func checkForValidAuthorization(ofType authorizationType: WebServiceAuthorizationType,
                                     completion: @escaping (AuthorizationTokenResult) -> Void) {
         
         switch authorizationType {
         case .none:
             completion((token: nil, error: nil))
-        case .basicAuth:
+        case .authToken:
             tokenManager.ensureValidToken(ofType: authorizationType, completion: completion)
         }
     }
     
     /// Handle the response data returned by a web service request. If there are no errors, convert
     /// the data to a json dictionary.
-    /// - parameters:
-    ///   - data:     The data returned by the web service request. Presumably json data.
-    ///   - response: HTTP response data from the web service request.
-    ///   - error:    Error reported by the web service.
+    /// - parameter data:     The data returned by the web service request. Presumably json data.
+    /// - parameter response: HTTP response data from the web service request.
+    /// - parameter error:    Error reported by the web service.
     func handleRequestResponse<Model: Decodable>(_ data: Data?,
                                                  response: URLResponse?,
                                                  error: Error?) -> WebServiceResult<Model> {
         
         // check for request error
         if let error = error {
-            print("\(#file) - \(#function) JsonWebService response error: \(error.localizedDescription)")
+            logger.error("JsonWebService response error: \(error.localizedDescription)")
             return .failure(WebServiceError.urlSession(error: error))
         }
         
         // check for expected response object type
         guard let response = response as? HTTPURLResponse else {
-            print("\(#file) - \(#function) JsonWebService response is not HTTPURLResponse")
+            logger.error("JsonWebService response is not HTTPURLResponse")
             return .failure(WebServiceError.serverResponse)
         }
         
         // check for error response from server
         guard 200...299 ~= response.statusCode else {
-            print("\(#file) - \(#function) JsonWebService response code is not 200. It is \(response.statusCode)")
+            logger.error("JsonWebService response code is not 200. It is \(response.statusCode)")
             return .failure(WebServiceError.statusCode(code: response.statusCode))
         }
         
@@ -245,7 +276,15 @@ private extension JsonWebService {
             return .success(nil)
         }
         
-        // parse the response data into a model object.
+        // if the response data is csv text, decode it as a string.
+        let contentType = response.allHeaderFields[WebServiceHeaderKey.contentType] as? String
+        if let contentType = contentType,
+            contentType == WebServiceHeader.textCsv,
+            Model.self == String.self {
+                return .success(String(bytes: data, encoding: .utf8) as? Model)
+        }
+        
+        // the response data is expectd to be JSON. parse it into a model object.
         let decoder = JSONDecoder()
         do {
             let model = try decoder.decode(Model.self, from: data)
@@ -253,10 +292,10 @@ private extension JsonWebService {
         }
         catch {
             if let decodingError = error as? DecodingError {
-                print("\(#file) - \(#function) decode error: ", decodingError.detailedDescription)
+                logger.error("Decode error: " + decodingError.detailedDescription)
             }
             else {
-                print("\(#file) - \(#function) decode error: \(error.localizedDescription)")
+                logger.error("Decode error: \(error.localizedDescription)")
             }
             return .failure(WebServiceError.responseData(error: error))
         }
@@ -279,6 +318,9 @@ extension DecodingError {
             return "Type mismatch: \(type) - \(context.debugDescription)"
         case .valueNotFound(let type, let context):
             return "Value not found: \(type) - \(context.debugDescription)"
+        @unknown default:
+            logger.warn("Unhandled `DecodingError` type: \(self)")
+            return "Unhandled DecodingError: \(self)"
         }
     }
 }

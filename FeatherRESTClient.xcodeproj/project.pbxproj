@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7F1DEB0926D586970076B2EF /* AppString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F1DEB0826D586970076B2EF /* AppString.swift */; };
+		7F1DEB0A26D586970076B2EF /* AppString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F1DEB0826D586970076B2EF /* AppString.swift */; };
+		7F1DEB0D26D5D6590076B2EF /* DebugConsoleDestinationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F1DEB0C26D5D6590076B2EF /* DebugConsoleDestinationTests.swift */; };
+		7F1DEB0F26D5D7150076B2EF /* QaLoggerDestinationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F1DEB0E26D5D7150076B2EF /* QaLoggerDestinationTests.swift */; };
+		7F1DEB1126D5D7420076B2EF /* QuickLoggerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F1DEB1026D5D7420076B2EF /* QuickLoggerTests.swift */; };
+		7F1DEB1326D5D7DE0076B2EF /* XCTestCase+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F1DEB1226D5D7DE0076B2EF /* XCTestCase+Ext.swift */; };
+		7F1DEB1626D5DEF00076B2EF /* FakeReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F1DEB1526D5DEF00076B2EF /* FakeReachability.swift */; };
+		7F1DEB1726D5DEF00076B2EF /* FakeReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F1DEB1526D5DEF00076B2EF /* FakeReachability.swift */; };
+		7F1DEB1926D5DF2F0076B2EF /* FakeUrlSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F1DEB1826D5DF2F0076B2EF /* FakeUrlSessionManager.swift */; };
+		7F1DEB1A26D5DF2F0076B2EF /* FakeUrlSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F1DEB1826D5DF2F0076B2EF /* FakeUrlSessionManager.swift */; };
 		7F227011207C46FE0083293C /* JsonWebServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F227010207C46FE0083293C /* JsonWebServiceTests.swift */; };
 		7F227014207C47490083293C /* WebServicesHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F227013207C47490083293C /* WebServicesHelper.swift */; };
 		7F227015207C48E10083293C /* AuthenticationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F34599A205D7DE600E8A07A /* AuthenticationService.swift */; };
@@ -30,6 +40,20 @@
 		7F863F5A2058C52A001136A5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7F863F582058C52A001136A5 /* Main.storyboard */; };
 		7F863F5C2058C52A001136A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7F863F5B2058C52A001136A5 /* Assets.xcassets */; };
 		7F863F5F2058C52A001136A5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7F863F5D2058C52A001136A5 /* LaunchScreen.storyboard */; };
+		7F9B5AB526CED37200B2053D /* QuikLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9B5AB426CED37200B2053D /* QuikLogger.swift */; };
+		7F9B5AB726CED3E500B2053D /* QaLoggerDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9B5AB626CED3E500B2053D /* QaLoggerDestination.swift */; };
+		7F9B5AB826CED42500B2053D /* QaLoggerDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9B5AB626CED3E500B2053D /* QaLoggerDestination.swift */; };
+		7F9B5AB926CED42C00B2053D /* QuikLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9B5AB426CED37200B2053D /* QuikLogger.swift */; };
+		7F9B5ABB26CED4C800B2053D /* DebugConsoleDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9B5ABA26CED4C800B2053D /* DebugConsoleDestination.swift */; };
+		7F9B5ABC26CED4C800B2053D /* DebugConsoleDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9B5ABA26CED4C800B2053D /* DebugConsoleDestination.swift */; };
+		7F9B5ABE26CED71A00B2053D /* AppFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9B5ABD26CED71A00B2053D /* AppFile.swift */; };
+		7F9B5ABF26CED71A00B2053D /* AppFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9B5ABD26CED71A00B2053D /* AppFile.swift */; };
+		7F9B5AC126CEF62400B2053D /* TokenStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9B5AC026CEF62400B2053D /* TokenStorage.swift */; };
+		7F9B5AC426CEF7A000B2053D /* WebServiceSessionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9B5AC326CEF7A000B2053D /* WebServiceSessionModel.swift */; };
+		7F9B5AC526CEF7A000B2053D /* WebServiceSessionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9B5AC326CEF7A000B2053D /* WebServiceSessionModel.swift */; };
+		7F9B5AC726CEF81D00B2053D /* Json.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9B5AC626CEF81D00B2053D /* Json.swift */; };
+		7F9B5AC826CEF81D00B2053D /* Json.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9B5AC626CEF81D00B2053D /* Json.swift */; };
+		7F9B5ACC26CEF8D100B2053D /* KeychainUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F9B5ACB26CEF8D100B2053D /* KeychainUtility.swift */; };
 		7FC94FAA206349D90096CB08 /* JsonWebService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F34598B205C898B00E8A07A /* JsonWebService.swift */; };
 /* End PBXBuildFile section */
 
@@ -44,6 +68,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7F1DEB0826D586970076B2EF /* AppString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppString.swift; sourceTree = "<group>"; };
+		7F1DEB0C26D5D6590076B2EF /* DebugConsoleDestinationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugConsoleDestinationTests.swift; sourceTree = "<group>"; };
+		7F1DEB0E26D5D7150076B2EF /* QaLoggerDestinationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QaLoggerDestinationTests.swift; sourceTree = "<group>"; };
+		7F1DEB1026D5D7420076B2EF /* QuickLoggerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickLoggerTests.swift; sourceTree = "<group>"; };
+		7F1DEB1226D5D7DE0076B2EF /* XCTestCase+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Ext.swift"; sourceTree = "<group>"; };
+		7F1DEB1526D5DEF00076B2EF /* FakeReachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeReachability.swift; sourceTree = "<group>"; };
+		7F1DEB1826D5DF2F0076B2EF /* FakeUrlSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeUrlSessionManager.swift; sourceTree = "<group>"; };
 		7F227010207C46FE0083293C /* JsonWebServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonWebServiceTests.swift; sourceTree = "<group>"; };
 		7F227013207C47490083293C /* WebServicesHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebServicesHelper.swift; sourceTree = "<group>"; };
 		7F227017207D6F360083293C /* AuthenticationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationServiceTests.swift; sourceTree = "<group>"; };
@@ -66,6 +97,14 @@
 		7F863F602058C52A001136A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7F863F652058C52A001136A5 /* FeatherRESTClientTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FeatherRESTClientTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F863F6B2058C52A001136A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7F9B5AB426CED37200B2053D /* QuikLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuikLogger.swift; sourceTree = "<group>"; };
+		7F9B5AB626CED3E500B2053D /* QaLoggerDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QaLoggerDestination.swift; sourceTree = "<group>"; };
+		7F9B5ABA26CED4C800B2053D /* DebugConsoleDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugConsoleDestination.swift; sourceTree = "<group>"; };
+		7F9B5ABD26CED71A00B2053D /* AppFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFile.swift; sourceTree = "<group>"; };
+		7F9B5AC026CEF62400B2053D /* TokenStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenStorage.swift; sourceTree = "<group>"; };
+		7F9B5AC326CEF7A000B2053D /* WebServiceSessionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebServiceSessionModel.swift; sourceTree = "<group>"; };
+		7F9B5AC626CEF81D00B2053D /* Json.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Json.swift; sourceTree = "<group>"; };
+		7F9B5ACB26CEF8D100B2053D /* KeychainUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainUtility.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,10 +125,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7F1DEB0B26D5D6330076B2EF /* Logging */ = {
+			isa = PBXGroup;
+			children = (
+				7F1DEB0C26D5D6590076B2EF /* DebugConsoleDestinationTests.swift */,
+				7F1DEB0E26D5D7150076B2EF /* QaLoggerDestinationTests.swift */,
+				7F1DEB1026D5D7420076B2EF /* QuickLoggerTests.swift */,
+			);
+			path = Logging;
+			sourceTree = "<group>";
+		};
+		7F1DEB1426D5DED50076B2EF /* Fakes */ = {
+			isa = PBXGroup;
+			children = (
+				7F1DEB1526D5DEF00076B2EF /* FakeReachability.swift */,
+				7F1DEB1826D5DF2F0076B2EF /* FakeUrlSessionManager.swift */,
+			);
+			path = Fakes;
+			sourceTree = "<group>";
+		};
 		7F227012207C47370083293C /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
 				7F227013207C47490083293C /* WebServicesHelper.swift */,
+				7F1DEB1226D5D7DE0076B2EF /* XCTestCase+Ext.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -110,9 +169,11 @@
 			children = (
 				7F34598B205C898B00E8A07A /* JsonWebService.swift */,
 				7F34598A205C898B00E8A07A /* Reachability.swift */,
+				7F9B5AC026CEF62400B2053D /* TokenStorage.swift */,
 				7F34598C205C898B00E8A07A /* URLSessionManagable.swift */,
 				7F345989205C898A00E8A07A /* WebServiceable.swift */,
 				7F34598D205C898B00E8A07A /* WebServiceError.swift */,
+				7F9B5AC326CEF7A000B2053D /* WebServiceSessionModel.swift */,
 				7F345998205D7BA800E8A07A /* WebServiceTokenManager.swift */,
 			);
 			path = Core;
@@ -121,7 +182,10 @@
 		7F863F462058C52A001136A5 = {
 			isa = PBXGroup;
 			children = (
+				7F1DEB1426D5DED50076B2EF /* Fakes */,
 				7F863F512058C52A001136A5 /* FeatherRESTClient */,
+				7F9B5AB326CED33A00B2053D /* Logging */,
+				7F9B5AC926CEF88700B2053D /* Utility */,
 				7F345981205C87F600E8A07A /* WebServices */,
 				7F863F682058C52A001136A5 /* FeatherRESTClientTests */,
 				7F863F502058C52A001136A5 /* Products */,
@@ -155,11 +219,33 @@
 			isa = PBXGroup;
 			children = (
 				7F227012207C47370083293C /* Helpers */,
+				7F1DEB0B26D5D6330076B2EF /* Logging */,
 				7F227017207D6F360083293C /* AuthenticationServiceTests.swift */,
 				7F227010207C46FE0083293C /* JsonWebServiceTests.swift */,
 				7F863F6B2058C52A001136A5 /* Info.plist */,
 			);
 			path = FeatherRESTClientTests;
+			sourceTree = "<group>";
+		};
+		7F9B5AB326CED33A00B2053D /* Logging */ = {
+			isa = PBXGroup;
+			children = (
+				7F9B5ABD26CED71A00B2053D /* AppFile.swift */,
+				7F9B5ABA26CED4C800B2053D /* DebugConsoleDestination.swift */,
+				7F9B5AB626CED3E500B2053D /* QaLoggerDestination.swift */,
+				7F9B5AB426CED37200B2053D /* QuikLogger.swift */,
+			);
+			path = Logging;
+			sourceTree = "<group>";
+		};
+		7F9B5AC926CEF88700B2053D /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				7F1DEB0826D586970076B2EF /* AppString.swift */,
+				7F9B5AC626CEF81D00B2053D /* Json.swift */,
+				7F9B5ACB26CEF8D100B2053D /* KeychainUtility.swift */,
+			);
+			path = Utility;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -265,15 +351,26 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7F9B5AB726CED3E500B2053D /* QaLoggerDestination.swift in Sources */,
 				7F34599D20608ACB00E8A07A /* BasicAuthManager.swift in Sources */,
 				7F345991205C898B00E8A07A /* JsonWebService.swift in Sources */,
+				7F1DEB1626D5DEF00076B2EF /* FakeReachability.swift in Sources */,
+				7F1DEB1926D5DF2F0076B2EF /* FakeUrlSessionManager.swift in Sources */,
 				7F345990205C898B00E8A07A /* Reachability.swift in Sources */,
 				7F345999205D7BA800E8A07A /* WebServiceTokenManager.swift in Sources */,
 				7F345992205C898B00E8A07A /* URLSessionManagable.swift in Sources */,
 				7F34599B205D7DE600E8A07A /* AuthenticationService.swift in Sources */,
+				7F9B5AC426CEF7A000B2053D /* WebServiceSessionModel.swift in Sources */,
 				7F863F572058C52A001136A5 /* DetailViewController.swift in Sources */,
+				7F9B5AC126CEF62400B2053D /* TokenStorage.swift in Sources */,
+				7F9B5AB526CED37200B2053D /* QuikLogger.swift in Sources */,
+				7F9B5ABE26CED71A00B2053D /* AppFile.swift in Sources */,
+				7F9B5ACC26CEF8D100B2053D /* KeychainUtility.swift in Sources */,
 				7F863F552058C52A001136A5 /* MasterViewController.swift in Sources */,
+				7F1DEB0926D586970076B2EF /* AppString.swift in Sources */,
+				7F9B5AC726CEF81D00B2053D /* Json.swift in Sources */,
 				7F345993205C898B00E8A07A /* WebServiceError.swift in Sources */,
+				7F9B5ABB26CED4C800B2053D /* DebugConsoleDestination.swift in Sources */,
 				7F863F532058C52A001136A5 /* AppDelegate.swift in Sources */,
 				7F34598F205C898B00E8A07A /* WebServiceable.swift in Sources */,
 				7F345985205C88CF00E8A07A /* IcndbService.swift in Sources */,
@@ -284,14 +381,27 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7F1DEB0D26D5D6590076B2EF /* DebugConsoleDestinationTests.swift in Sources */,
+				7F9B5AB926CED42C00B2053D /* QuikLogger.swift in Sources */,
+				7F1DEB1726D5DEF00076B2EF /* FakeReachability.swift in Sources */,
+				7F1DEB1326D5D7DE0076B2EF /* XCTestCase+Ext.swift in Sources */,
 				7F227018207D6F360083293C /* AuthenticationServiceTests.swift in Sources */,
+				7F1DEB0A26D586970076B2EF /* AppString.swift in Sources */,
 				7F345997205C8A5500E8A07A /* WebServiceError.swift in Sources */,
 				7F227016207C490C0083293C /* IcndbService.swift in Sources */,
 				7F345996205C8A4E00E8A07A /* WebServiceable.swift in Sources */,
 				7F227014207C47490083293C /* WebServicesHelper.swift in Sources */,
+				7F9B5AC826CEF81D00B2053D /* Json.swift in Sources */,
 				7FC94FAA206349D90096CB08 /* JsonWebService.swift in Sources */,
+				7F1DEB0F26D5D7150076B2EF /* QaLoggerDestinationTests.swift in Sources */,
+				7F9B5AC526CEF7A000B2053D /* WebServiceSessionModel.swift in Sources */,
+				7F9B5ABF26CED71A00B2053D /* AppFile.swift in Sources */,
 				7F227011207C46FE0083293C /* JsonWebServiceTests.swift in Sources */,
+				7F9B5ABC26CED4C800B2053D /* DebugConsoleDestination.swift in Sources */,
 				7F345995205C8A3A00E8A07A /* URLSessionManagable.swift in Sources */,
+				7F9B5AB826CED42500B2053D /* QaLoggerDestination.swift in Sources */,
+				7F1DEB1A26D5DF2F0076B2EF /* FakeUrlSessionManager.swift in Sources */,
+				7F1DEB1126D5D7420076B2EF /* QuickLoggerTests.swift in Sources */,
 				7F227015207C48E10083293C /* AuthenticationService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -408,6 +518,7 @@
 				DEVELOPMENT_TEAM = 9JG95NNF4W;
 				INFOPLIST_FILE = FeatherRESTClientTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				"OTHER_SWIFT_FLAGS[arch=*]" = "-D TEST_TARGET";
 				PRODUCT_BUNDLE_IDENTIFIER = com.randomvisual.FeatherRESTClientTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
@@ -562,6 +673,7 @@
 				DEVELOPMENT_TEAM = 9JG95NNF4W;
 				INFOPLIST_FILE = FeatherRESTClientTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				"OTHER_SWIFT_FLAGS[arch=*]" = "-D TEST_TARGET";
 				PRODUCT_BUNDLE_IDENTIFIER = com.randomvisual.FeatherRESTClientTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
